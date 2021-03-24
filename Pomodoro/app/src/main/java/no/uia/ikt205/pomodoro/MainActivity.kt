@@ -22,6 +22,8 @@ class MainActivity : AppCompatActivity() {
     var timeToCountDownInMs = 5000L
     var timeTicks = 1000L
 
+    var check = false
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,9 +61,14 @@ class MainActivity : AppCompatActivity() {
 
     fun startCountDown(v: View){
 
+        if(check){
+            timer.cancel()
+        }
+
         timer = object : CountDownTimer(timeToCountDownInMs,timeTicks) {
             override fun onFinish() {
                 Toast.makeText(this@MainActivity,"Arbeidsøkt er ferdig", Toast.LENGTH_SHORT).show()
+                check = false
             }
 
             override fun onTick(millisUntilFinished: Long) {
@@ -69,6 +76,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+        check = true
         timer.start()
     }
 
