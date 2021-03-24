@@ -4,100 +4,137 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.view.View
-import android.widget.Button
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import no.uia.ikt205.pomodoro.util.millisecondsToDescriptiveTime
 
 class MainActivity : AppCompatActivity() {
 
-    lateinit var timer:CountDownTimer
+    lateinit var workTimer:CountDownTimer
+    lateinit var pauseTimer:CountDownTimer
+    lateinit var countdownDisplay:TextView
     lateinit var startButton:Button
-    lateinit var btn30:Button
-    lateinit var btn60:Button
-    lateinit var btn90:Button
-    lateinit var btn120:Button
-    lateinit var coutdownDisplay:TextView
+    lateinit var setNumberOfRepetitions: EditText
+
+    lateinit var workTimeTextDisplay: TextView
+    lateinit var setWorkTimeSeekBar: SeekBar
+    lateinit var pauseTimeTextDisplay: TextView
+    lateinit var setPauseTimeSeekBar: SeekBar
 
     var timeToCountDownInMs = 5000L
+    var pauseTimeInMs = 10000L
     var timeTicks = 1000L
+    var numberOfRepetitions = 0
 
-    var check = false
+    var workTimeInProgress = false
+    var pauseTimeInProgress = false
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        startButton = findViewById<Button>(R.id.startCountdownButton)
-        startButton.setOnClickListener(){
+        countdownDisplay = findViewById(R.id.countDownView)
+        workTimeTextDisplay = findViewById(R.id.setWorkTimeView)
+        pauseTimeTextDisplay = findViewById(R.id.setPauseTimeView)
+        setNumberOfRepetitions = findViewById(R.id.setNumberOfRepetitions)
+
+        startButton = findViewById(R.id.startCountdownButton)
+        startButton.setOnClickListener {
+            numberOfRepetitions = setNumberOfRepetitions.text.toString().toInt()
             startCountDown(it)
         }
 
-        btn30 = findViewById<Button>(R.id.setbtn30)
-        btn30.setOnClickListener(){
-            setbtn30()
-        }
+        setWorkTimeSeekBar = findViewById(R.id.WorkTimeSeekBar)
+        setWorkTimeSeekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener{
+            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                workTimeTextDisplay.text = progress.toString()
+                timeToCountDownInMs = progress * 60 * timeTicks
+            }
 
-        btn60 = findViewById<Button>(R.id.setbtn60)
-        btn60.setOnClickListener(){
-            setbtn60()
-        }
+            override fun onStartTrackingTouch(seekBar: SeekBar?) {
 
-        btn90 = findViewById<Button>(R.id.setbtn90)
-        btn90.setOnClickListener(){
-            setbtn90()
-        }
+            }
 
-        btn120 = findViewById<Button>(R.id.setbtn120)
-        btn120.setOnClickListener(){
-            setbtn120()
-        }
+            override fun onStopTrackingTouch(seekBar: SeekBar?) {
 
-       coutdownDisplay = findViewById<TextView>(R.id.countDownView)
+            }
+
+        })
+
+        setPauseTimeSeekBar = findViewById(R.id.PauseTimeSeekBar)
+        setPauseTimeSeekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener{
+            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                pauseTimeTextDisplay.text = progress.toString()
+                pauseTimeInMs = progress * 60 * timeTicks
+            }
+
+            override fun onStartTrackingTouch(seekBar: SeekBar?) {
+
+            }
+
+            override fun onStopTrackingTouch(seekBar: SeekBar?) {
+
+            }
+
+        })
 
     }
 
 
     fun startCountDown(v: View){
 
-        if(check){
-            timer.cancel()
+        if(workTimeInProgress){
+            workTimer.cancel()
+        }
+        if (pauseTimeInProgress){
+            pauseTimer.cancel()
         }
 
-        timer = object : CountDownTimer(timeToCountDownInMs,timeTicks) {
+        workTimer = object : CountDownTimer(timeToCountDownInMs,timeTicks) {
             override fun onFinish() {
-                Toast.makeText(this@MainActivity,"Arbeidsøkt er ferdig", Toast.LENGTH_SHORT).show()
-                check = false
+                if (numberOfRepetitions == 0){
+                    Toast.makeText(this@MainActivity, "Ferdig!!!", Toast.LENGTH_SHORT).show()
+                }
+                else {
+                    Toast.makeText(this@MainActivity, "Time for a break", Toast.LENGTH_SHORT).show()
+                    workTimeInProgress = false
+                    startPauseCountdown(v)
+                }
             }
 
             override fun onTick(millisUntilFinished: Long) {
-               updateCountDownDisplay(millisUntilFinished)
+                updateCountDownDisplay(millisUntilFinished)
             }
         }
 
-        check = true
-        timer.start()
+        workTimeInProgress = true
+        workTimer.start()
     }
 
-    fun setbtn30(){
-        timeToCountDownInMs = 1800000L
+
+    fun startPauseCountdown(v: View){
+
+        pauseTimer = object : CountDownTimer(pauseTimeInMs, timeTicks) {
+            override fun onFinish() {
+                Toast.makeText(this@MainActivity, "Back to work!", Toast.LENGTH_SHORT).show()
+                pauseTimeInProgress = false
+                numberOfRepetitions -= 1
+                startCountDown(v)
+            }
+
+            override fun onTick(millisUntilFinished: Long) {
+                updateCountDownDisplay(millisUntilFinished)
+            }
+        }
+
+        pauseTimeInProgress = true
+        pauseTimer.start()
     }
 
-    fun setbtn60(){
-        timeToCountDownInMs = 3600000L
-    }
-
-    fun setbtn90(){
-        timeToCountDownInMs = 5400000L
-    }
-
-    fun setbtn120(){
-        timeToCountDownInMs = 7200000L
-    }
 
     fun updateCountDownDisplay(timeInMs:Long){
-        coutdownDisplay.text = millisecondsToDescriptiveTime(timeInMs)
+        countdownDisplay.text = millisecondsToDescriptiveTime(timeInMs)
     }
 
 }
