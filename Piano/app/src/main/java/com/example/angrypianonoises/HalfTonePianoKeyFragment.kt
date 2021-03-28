@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import com.example.angrypianonoises.databinding.FragmentFullTonePianoKeyBinding
 import com.example.angrypianonoises.databinding.FragmentHalfTonePianoKeyBinding
 import kotlinx.android.synthetic.main.fragment_full_tone_piano_key.view.*
+import kotlinx.android.synthetic.main.fragment_half_tone_piano_key.view.*
 
 class HalfTonePianoKeyFragment : Fragment() {
 
@@ -29,12 +30,12 @@ class HalfTonePianoKeyFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
 
         _binding = FragmentHalfTonePianoKeyBinding.inflate(inflater)
         val view = binding.root
 
-        view.fullToneKey.setOnTouchListener(object: View.OnTouchListener{
+        view.halfToneKey.setOnTouchListener(object: View.OnTouchListener{
             override fun onTouch(v: View?, event: MotionEvent?): Boolean {
                 when(event?.action){
                     MotionEvent.ACTION_DOWN -> this@HalfTonePianoKeyFragment.onKeyDown?.invoke(note)

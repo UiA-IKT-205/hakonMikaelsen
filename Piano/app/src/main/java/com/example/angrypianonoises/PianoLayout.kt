@@ -6,9 +6,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.example.angrypianonoises.databinding.FragmentPianoBinding
+import kotlinx.android.synthetic.main.fragment_full_tone_piano_key.*
 import kotlinx.android.synthetic.main.fragment_full_tone_piano_key.view.*
 import kotlinx.android.synthetic.main.fragment_half_tone_piano_key.*
 import kotlinx.android.synthetic.main.fragment_half_tone_piano_key.view.*
+import kotlinx.android.synthetic.main.fragment_piano.view.*
 
 class PianoLayout : Fragment() {
 
@@ -17,6 +19,7 @@ class PianoLayout : Fragment() {
 
     private val fullTones = listOf("C", "D", "E", "F", "G", "A", "B", "C2", "D2", "E2", "F2", "G2", "A2", "B2")
     private val halfTones = listOf("C#", "D#", "F#", "G#", "A#", "C#2", "D#2", "F#2", "G#2", "A#2")
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,40 +31,46 @@ class PianoLayout : Fragment() {
         _binding = FragmentPianoBinding.inflate(layoutInflater)
         val view = binding.root
 
-        val fm = childFragmentManager
-        val ft = fm.beginTransaction()
+        val fragmentManager = childFragmentManager
+        val fragmentTransaction = fragmentManager.beginTransaction()
 
-        fullTones.forEach {
-            val fullTonePianoKey = FullTonePianoKeyFragment.newInstance(it)
+        fullTones.forEach { orgNoteValue ->
+            val fullTonePianoKey = FullTonePianoKeyFragment.newInstance(orgNoteValue)
 
-            fullTonePianoKey.onKeyDown = {
-                println("Piano key down $it")
+            fullTonePianoKey.onKeyDown = { note ->
+                println("Piano key down $note")
             }
 
-            fullTonePianoKey.onKeyUp = {
-                println("Piano key up $it")
+            fullTonePianoKey.onKeyUp = { note ->
+                println("Piano key up $note")
             }
 
-            ft.add(view.fullToneKey.id, fullTonePianoKey, "note_$it")
+            // View is possibly not instanced (possibly move to "onViewCreated")
+            fragmentTransaction.add(view.pianoKeys.id, fullTonePianoKey, "note_$orgNoteValue")
+
         }
 
-        halfTones.forEach {
-            val halfTonePianoKey = HalfTonePianoKeyFragment.newInstance(it)
+        halfTones.forEach { orgNoteValue ->
+            val halfTonePianoKey = HalfTonePianoKeyFragment.newInstance(orgNoteValue)
 
-            halfTonePianoKey.onKeyDown = {
-                println("Piano key down $it")
+            halfTonePianoKey.onKeyDown = { note ->
+                println("Piano key down $note")
             }
 
-            halfTonePianoKey.onKeyUp = {
-                println("Piano key up $it")
+            halfTonePianoKey.onKeyUp = { note ->
+                println("Piano key up $note")
             }
 
-            ft.add(view.halfToneKey.id, halfTonePianoKey, "note_$it")
+            // View is possibly not instanced (possibly move to "onViewCreated")
+            fragmentTransaction.add(view.pianoKeys.id, halfTonePianoKey, "note_$orgNoteValue")
+
         }
 
-
-
-        return inflater.inflate(R.layout.fragment_piano, container, false)
+        fragmentTransaction.commit()
+        return view
     }
 
+
 }
+
+
