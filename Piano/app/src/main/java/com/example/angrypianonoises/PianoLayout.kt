@@ -35,6 +35,8 @@ class PianoLayout : Fragment() {
         val fragmentManager = childFragmentManager
         val fragmentTransaction = fragmentManager.beginTransaction()
 
+        var scoreStartTime = uptimeMillis()
+
         fullTones.forEach { orgNoteValue ->
             val fullTonePianoKey = FullTonePianoKeyFragment.newInstance(orgNoteValue)
             var startPlay:Long = 0
@@ -46,7 +48,7 @@ class PianoLayout : Fragment() {
 
             fullTonePianoKey.onKeyUp = { note ->
                 var endPlay = uptimeMillis()
-                val saveNote = Note(note, startPlay, endPlay)
+                val saveNote = Note(note, scoreStartTime, startPlay, endPlay)
                 score.add(saveNote)
                 println("Piano key up $saveNote")
             }
@@ -67,7 +69,7 @@ class PianoLayout : Fragment() {
 
             halfTonePianoKey.onKeyUp = { note ->
                 var endPlay = uptimeMillis()
-                val saveNote = Note(note, startPlay, endPlay)
+                val saveNote = Note(note, scoreStartTime, startPlay, endPlay)
                 score.add(saveNote)
                 println("Piano key up $saveNote")
             }

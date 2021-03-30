@@ -1,10 +1,11 @@
 package com.example.angrypianonoises.data
 
-data class Note(val value:String, val start:Long, val end:Long){
+data class Note(val value:String, val startScore:Long, val startNote:Long, val endNote:Long){
 
-    var noteDuration = (end - start)
+    var scoreTime = (startNote - startScore)
+    var noteDuration = (endNote - startNote)
 
     override fun toString(): String {
-        return "$value, $noteDuration ms"
+        return "Note: $value, Time: $scoreTime ms, Note Duration: $noteDuration ms"
     }
 }
