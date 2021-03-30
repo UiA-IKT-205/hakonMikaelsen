@@ -7,10 +7,22 @@
     tools:context=".PianoLayout">
     
     <LinearLayout
-        android:id="@+id/pianoKeys"
+        android:id="@+id/fullToneKeysLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="horizontal"
+        android:layout_marginStart="20dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/fileNameTextEdit"
+        />
+
+    <LinearLayout
+        android:id="@+id/halfToneKeysLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:layout_marginStart="20dp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toTopOf="@+id/fileNameTextEdit"

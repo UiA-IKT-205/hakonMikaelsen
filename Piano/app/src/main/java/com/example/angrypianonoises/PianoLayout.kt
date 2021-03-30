@@ -1,16 +1,13 @@
 package com.example.angrypianonoises
 
 import android.os.Bundle
+import android.os.SystemClock.uptimeMillis
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.example.angrypianonoises.data.Note
 import com.example.angrypianonoises.databinding.FragmentPianoBinding
-import kotlinx.android.synthetic.main.fragment_full_tone_piano_key.*
-import kotlinx.android.synthetic.main.fragment_full_tone_piano_key.view.*
-import kotlinx.android.synthetic.main.fragment_half_tone_piano_key.*
-import kotlinx.android.synthetic.main.fragment_half_tone_piano_key.view.*
 import kotlinx.android.synthetic.main.fragment_piano.view.*
 import java.io.File
 import java.io.FileOutputStream
@@ -20,8 +17,8 @@ class PianoLayout : Fragment() {
     private var _binding:FragmentPianoBinding? = null
     private val binding get() = _binding!!
 
-    private val fullTones = listOf("C", "D", "E", "F", "G", "A", "B", "C2", "D2", "E2", "F2", "G2")
-    private val halfTones = listOf("C#", "D#", "F#", "G#", "A#", "C#2", "D#2", "F#2")
+    private val fullTones = listOf("C", "D", "E", "F", "G", "A", "B", "C2", "D2", "E2", "F2", "G2", "A2")
+    private val halfTones = listOf("C#", "D#", "F#", "G#", "A#", "C#2", "D#2", "F#2", "F#2")
     private val score:MutableList<Note> = mutableListOf<Note>() // Score == Noteark?
 
 
@@ -43,19 +40,19 @@ class PianoLayout : Fragment() {
             var startPlay:Long = 0
 
             fullTonePianoKey.onKeyDown = { note ->
-                startPlay = System.nanoTime()
+                startPlay = uptimeMillis()
                 println("Piano key down $note")
             }
 
-            fullTonePianoKey.onKeyUp = {
-                var endPlay = System.nanoTime()
-                val note = Note(it, startPlay, endPlay)
-                score.add(note)
-                println("Piano key up $note")
+            fullTonePianoKey.onKeyUp = { note ->
+                var endPlay = uptimeMillis()
+                val saveNote = Note(note, startPlay, endPlay)
+                score.add(saveNote)
+                println("Piano key up $saveNote")
             }
 
             // View is possibly not instanced (possibly move to "onViewCreated")
-            fragmentTransaction.add(view.pianoKeys.id, fullTonePianoKey, "note_$orgNoteValue")
+            fragmentTransaction.add(view.fullToneKeysLayout.id, fullTonePianoKey, "note_$orgNoteValue")
 
         }
 
@@ -71,7 +68,7 @@ class PianoLayout : Fragment() {
             }
 
             // View is possibly not instanced (possibly move to "onViewCreated")
-            fragmentTransaction.add(view.pianoKeys.id, halfTonePianoKey, "note_$orgNoteValue")
+            fragmentTransaction.add(view.halfToneKeysLayout.id, halfTonePianoKey, "note_$orgNoteValue")
 
         }
 
