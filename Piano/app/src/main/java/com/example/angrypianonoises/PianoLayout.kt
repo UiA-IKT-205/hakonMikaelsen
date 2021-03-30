@@ -58,13 +58,18 @@ class PianoLayout : Fragment() {
 
         halfTones.forEach { orgNoteValue ->
             val halfTonePianoKey = HalfTonePianoKeyFragment.newInstance(orgNoteValue)
+            var startPlay:Long = 0
 
             halfTonePianoKey.onKeyDown = { note ->
+                startPlay = uptimeMillis()
                 println("Piano key down $note")
             }
 
             halfTonePianoKey.onKeyUp = { note ->
-                println("Piano key up $note")
+                var endPlay = uptimeMillis()
+                val saveNote = Note(note, startPlay, endPlay)
+                score.add(saveNote)
+                println("Piano key up $saveNote")
             }
 
             // View is possibly not instanced (possibly move to "onViewCreated")
