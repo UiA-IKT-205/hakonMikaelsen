@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1071520751808",
+    "project_id": "superpiano-47241",
+    "storage_bucket": "superpiano-47241.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1071520751808:android:e7f3b71415a40751130d25",
+        "android_client_info": {
+          "package_name": "com.example.angrypianonoises"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1071520751808-ioavmacg5sa0m8mkimon9etkgcgjh0j5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDSJeSjTWLeW9n-KLSuU5twSu4-bILKplk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1071520751808-ioavmacg5sa0m8mkimon9etkgcgjh0j5.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
