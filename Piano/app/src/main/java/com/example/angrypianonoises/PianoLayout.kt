@@ -1,19 +1,26 @@
 package com.example.angrypianonoises
 
+import android.net.Uri
 import android.os.Bundle
 import android.os.SystemClock.uptimeMillis
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.net.toUri
 import com.example.angrypianonoises.data.Note
 import com.example.angrypianonoises.databinding.FragmentPianoBinding
 import kotlinx.android.synthetic.main.fragment_piano.view.*
 import java.io.File
 import java.io.FileOutputStream
 
+
+
 class PianoLayout : Fragment() {
+
+    var onSave:((file: Uri) -> Unit)? = null
 
     private var _binding:FragmentPianoBinding? = null
     private val binding get() = _binding!!
@@ -85,18 +92,13 @@ class PianoLayout : Fragment() {
 
             if (fileSaveConditions(fileName, path)) {
                 // println(fileName)
-                fileName = "$fileName.musikk"
 
-                FileOutputStream(File(path, fileName), true).bufferedWriter().use { writer ->
-                    // bufferedWriter lever her, men stenger ned utenfor
-                    score.forEach {
-                        writer.write("${it.toString()}\n")
-                    }
-                }
+                saveFile(fileName, path)
+
+                Log.d("AngryPianoNoises:PianoLayout", "$fileName Saved to ${path.toString()}")
                 Toast.makeText(this.activity, "Music score saved", Toast.LENGTH_SHORT).show()
                 scoreStartTime = uptimeMillis()
                 score.clear()
-
             }
         }
 
@@ -104,15 +106,23 @@ class PianoLayout : Fragment() {
     }
 
 
-    fun doesFileExist(filename: String, path: File?): Boolean {
-        val extendedFileName = "$filename.musikk"
-        val fileAndPath = File(path, extendedFileName)
+    private fun saveFile(fileName:String, path:File?){
+        val extendedFileName = "$fileName.musikk"
+        val file = File(path, extendedFileName)
 
-        return fileAndPath.exists()
+        FileOutputStream(file, true).bufferedWriter().use { writer ->
+            // bufferedWriter lever her, men stenger ned utenfor
+            score.forEach {
+                writer.write("${it.toString()}\n")
+            }
+        }
+
+        this.onSave?.invoke(file.toUri())
+
     }
 
 
-    fun fileSaveConditions(filename:String, path: File?): Boolean{
+    private fun fileSaveConditions(filename:String, path: File?): Boolean{
 
         when {
             path == null -> {
@@ -132,11 +142,16 @@ class PianoLayout : Fragment() {
                 return false
             }
         }
-
         return true
     }
 
 
+    private fun doesFileExist(filename: String, path: File?): Boolean {
+        val extendedFileName = "$filename.musikk"
+        val fileAndPath = File(path, extendedFileName)
+
+        return fileAndPath.exists()
+    }
 
 
 }
