@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import com.example.angrypianonoises.data.Note
 import com.example.angrypianonoises.databinding.FragmentPianoBinding
 import kotlinx.android.synthetic.main.fragment_piano.view.*
@@ -47,13 +48,12 @@ class PianoLayout : Fragment() {
             }
 
             fullTonePianoKey.onKeyUp = { note ->
-                var endPlay = uptimeMillis()
+                val endPlay = uptimeMillis()
                 val saveNote = Note(note, scoreStartTime, startPlay, endPlay)
                 score.add(saveNote)
                 println("Piano key up $saveNote")
             }
 
-            // View is possibly not instanced (possibly move to "onViewCreated")
             fragmentTransaction.add(view.fullToneKeysLayout.id, fullTonePianoKey, "note_$orgNoteValue")
 
         }
@@ -68,15 +68,13 @@ class PianoLayout : Fragment() {
             }
 
             halfTonePianoKey.onKeyUp = { note ->
-                var endPlay = uptimeMillis()
+                val endPlay = uptimeMillis()
                 val saveNote = Note(note, scoreStartTime, startPlay, endPlay)
                 score.add(saveNote)
                 println("Piano key up $saveNote")
             }
 
-            // View is possibly not instanced (possibly move to "onViewCreated")
             fragmentTransaction.add(view.halfToneKeysLayout.id, halfTonePianoKey, "note_$orgNoteValue")
-
         }
 
         fragmentTransaction.commit()
@@ -85,23 +83,60 @@ class PianoLayout : Fragment() {
             var fileName = view.fileNameTextEdit.text.toString()
             val path = this.activity?.getExternalFilesDir(null)
 
-            if (score.count() > 0 && fileName.isNotEmpty() && path != null){
-                println(fileName)
+            if (fileSaveConditions(fileName, path)) {
+                // println(fileName)
                 fileName = "$fileName.musikk"
+
                 FileOutputStream(File(path, fileName), true).bufferedWriter().use { writer ->
                     // bufferedWriter lever her, men stenger ned utenfor
-                    score.forEach{
+                    score.forEach {
                         writer.write("${it.toString()}\n")
                     }
                 }
+                Toast.makeText(this.activity, "Music score saved", Toast.LENGTH_SHORT).show()
+                scoreStartTime = uptimeMillis()
+                score.clear()
 
-            } else {
-                /// TODO: What to do?
             }
         }
 
         return view
     }
+
+
+    fun doesFileExist(filename: String, path: File?): Boolean {
+        val extendedFileName = "$filename.musikk"
+        val fileAndPath = File(path, extendedFileName)
+
+        return fileAndPath.exists()
+    }
+
+
+    fun fileSaveConditions(filename:String, path: File?): Boolean{
+
+        when {
+            path == null -> {
+                Toast.makeText(this.activity, "Missing directory path", Toast.LENGTH_SHORT).show()
+                return false
+            }
+            filename.isEmpty() -> {
+                Toast.makeText(this.activity, "File name is missing", Toast.LENGTH_SHORT).show()
+                return false
+            }
+            doesFileExist(filename,path) -> {
+                Toast.makeText(this.activity, "File already exists", Toast.LENGTH_SHORT).show()
+                return false
+            }
+            score.count() <= 0 -> {
+                Toast.makeText(this.activity, "No notes have been played", Toast.LENGTH_SHORT).show()
+                return false
+            }
+        }
+
+        return true
+    }
+
+
 
 
 }
