@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".MainList">
+
+
+    <TableLayout
+        android:id="@+id/titleAndSlogan"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:background="@color/orange"
+        android:gravity="center"
+
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+
+
+        >
+
+        <TableRow
+            android:id="@+id/titleRow"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            >
+
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/app_name"
+                android:textColor="@color/black"
+                android:textSize="40sp"
+                android:gravity="center"
+                />
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/sloganRow"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            >
+
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/sloganText"
+                android:textSize="20sp"
+                android:gravity="center"
+
+                />
+        </TableRow>
+    </TableLayout>
+
+
+    <LinearLayout
+        android:id="@+id/todoListView"
+        android:layout_width="match_parent"
+        android:layout_height="530dp"
+        android:orientation="vertical"
+
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/titleAndSlogan"
+        app:layout_constraintBottom_toTopOf="@+id/inputNameOfList"
+        />
+
+
+
+
+    <EditText
+        android:id="@+id/inputNameOfList"
+        android:layout_width="250dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginBottom="5dp"
+        android:hint="@string/hintNameOfNewList"
+        android:importantForAutofill="no"
+        android:inputType="text"
+
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        />
+
+    <Button
+        android:id="@+id/addListBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="5dp"
+        android:text="@string/addListButtonText"
+
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        />
+
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
